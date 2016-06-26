@@ -1,12 +1,13 @@
 package device
 
 import (
+	"database/sql"
 	"os"
 	"testing"
 	"time"
 
+	"github.com/DavidHuie/gomigrate"
 	"github.com/go-kit/kit/log"
-	"github.com/jmoiron/sqlx"
 )
 
 func TestSaveTokenUpdate(t *testing.T) {
@@ -338,7 +339,7 @@ var (
 )
 
 func datastore(t *testing.T) Datastore {
-	//setup()
+	setup()
 	logger := log.NewLogfmtLogger(os.Stderr)
 	ds, err := NewDB("postgres", testConn, logger)
 	if err != nil {
@@ -348,26 +349,28 @@ func datastore(t *testing.T) Datastore {
 }
 
 func setup() {
-	db, err := sqlx.Open("postgres", testConn)
+	db, err := sql.Open("postgres", testConn)
 	if err != nil {
 		panic(err)
 	}
-	migrate(db)
 	defer db.Close()
+	migrator, _ := gomigrate.NewMigrator(db, gomigrate.Postgres{}, "../migrations")
+	err = migrator.Migrate()
+	if err != nil {
+		panic(err)
+	}
+
 }
 
 func teardown() {
-	db, err := sqlx.Open("postgres", testConn)
+	db, err := sql.Open("postgres", testConn)
 	if err != nil {
 		panic(err)
 	}
-
-	drop := `
-	DROP TABLE IF EXISTS device_workflow;
-	DROP TABLE IF EXISTS devices;
-	DROP INDEX IF EXISTS devices.serial_idx;
-	DROP INDEX IF EXISTS devices.udid_idx;
-	`
-	db.MustExec(drop)
 	defer db.Close()
+	migrator, _ := gomigrate.NewMigrator(db, gomigrate.Postgres{}, "../migrations")
+	err = migrator.RollbackAll()
+	if err != nil {
+		panic(err)
+	}
 }
