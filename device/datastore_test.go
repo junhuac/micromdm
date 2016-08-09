@@ -338,7 +338,7 @@ func TestGetDeviceByUDID(t *testing.T) {
 }
 
 var (
-	testConn = "user=micromdm password=micromdm dbname=micromdm sslmode=disable"
+	testConn = "user=micromdm password=micromdm dbname=micromdm sslmode=disable host=mdm.groob.io port=5434"
 )
 
 func datastore(t *testing.T) Datastore {
@@ -352,8 +352,7 @@ func datastore(t *testing.T) Datastore {
 }
 
 func setup(t *testing.T) {
-	conn := fmt.Sprintf("%v host=mdm.groob.io, port=5434", testConn)
-	db, err := sql.Open("postgres", conn)
+	db, err := sql.Open("postgres", testConn)
 	if err != nil {
 		t.Fatal(err)
 	}
