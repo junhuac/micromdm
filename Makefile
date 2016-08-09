@@ -12,6 +12,7 @@ deps:
 
 build: deps
 	@echo ">> building binaries"
+	go test -v github.com/micromdm/micromdm/device
 	@$(release)
 
 docker: 
