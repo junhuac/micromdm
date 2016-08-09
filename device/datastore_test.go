@@ -120,6 +120,7 @@ func addTestDevices(t *testing.T, ds Datastore) []Device {
 	}
 	return devices
 }
+
 func TestInsertFetch(t *testing.T) {
 	ds := datastore(t)
 	defer teardown()
@@ -357,7 +358,7 @@ func setup(t *testing.T) {
 	}
 	defer db.Close()
 
-	migrator, err := gomigrate.NewMigrator(db, gomigrate.Postgres{}, "./migrations")
+	migrator, err := gomigrate.NewMigrator(db, gomigrate.Postgres{}, "../migrations")
 	if err != nil {
 		t.Fatal(err)
 	}
