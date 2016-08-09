@@ -5,8 +5,11 @@ go:
   - tip
 
 services:
-    - postgresql: "9.5"
+    - postgresql
+
+addons:
+  postgresql: "9.5"
 
 before_script:
-  - psql -c 'create database micromdm;' -U postgres
+    - psql -c 'create database micromdm;' -U postgres
 
