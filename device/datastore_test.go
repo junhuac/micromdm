@@ -338,7 +338,7 @@ func TestGetDeviceByUDID(t *testing.T) {
 }
 
 var (
-	testConn = "user=postgres password=postgres dbname=micromdm sslmode=disable"
+	testConn = "user=micromdm password=micromdm dbname=micromdm sslmode=disable"
 )
 
 func datastore(t *testing.T) Datastore {
@@ -352,7 +352,10 @@ func datastore(t *testing.T) Datastore {
 }
 
 func setup(t *testing.T) {
-	db, err := sql.Open("postgres", testConn)
+	host := os.Getenv("POSTGRES_ENV_POSTGRES_HOST")
+	port := os.Getenv("POSTGRES_ENV_POSTGRES_PORT")
+	conn := fmt.Sprintf("%v host=%v, port=%v", testConn, host, port)
+	db, err := sql.Open("postgres", conn)
 	if err != nil {
 		t.Fatal(err)
 	}

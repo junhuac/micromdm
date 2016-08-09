@@ -1,16 +1,15 @@
 language: go
-sudo: false
 
 go:
   - 1.6
   - tip
 
-services:
-    - postgresql
-
-addons:
-  postgresql: "9.5"
-
-before_script:
-    - psql -c 'create database micromdm;' -U postgres
-
+# services:
+#     - postgresql
+#
+# addons:
+#   postgresql: "9.5"
+#
+# before_script:
+#     - psql -c 'create database micromdm;' -U postgres
+#
