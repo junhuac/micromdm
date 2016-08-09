@@ -1,10 +1,12 @@
 package device
 
 import (
+	"database/sql"
 	"os"
 	"testing"
 	"time"
 
+	"github.com/DavidHuie/gomigrate"
 	"github.com/go-kit/kit/log"
 	"github.com/jmoiron/sqlx"
 )
@@ -65,7 +67,7 @@ func addTestDevices(t *testing.T, ds Datastore) []Device {
 	}{
 		{
 			Device{
-				SerialNumber: "DEADBEEF123A",
+				SerialNumber: toNullString("DEADBEEF123A"),
 				Model:        "Macbook",
 				Description:  "It's a laptop",
 				Color:        "red",
@@ -73,7 +75,7 @@ func addTestDevices(t *testing.T, ds Datastore) []Device {
 		},
 		{
 			Device{
-				SerialNumber: "DEADBEEF123A",
+				SerialNumber: toNullString("DEADBEEF123A"),
 				Model:        "Macbook",
 				Description:  "It's a laptop",
 				Color:        "red",
@@ -81,7 +83,7 @@ func addTestDevices(t *testing.T, ds Datastore) []Device {
 		},
 		{
 			Device{
-				SerialNumber: "DEADBEEF123B",
+				SerialNumber: toNullString("DEADBEEF123B"),
 				Model:        "Macbook",
 				Description:  "It's a laptop",
 				Color:        "blue",
@@ -89,7 +91,7 @@ func addTestDevices(t *testing.T, ds Datastore) []Device {
 		},
 		{
 			Device{
-				SerialNumber:         "DEADBEEF123C",
+				SerialNumber:         toNullString("DEADBEEF123C"),
 				Model:                "iPad",
 				Description:          "It's a tablet",
 				Color:                "pink",
@@ -127,7 +129,7 @@ func TestInsertFetch(t *testing.T) {
 	}{
 		{
 			Device{
-				SerialNumber: "DEADBEEF123A",
+				SerialNumber: toNullString("DEADBEEF123A"),
 				Model:        "Macbook",
 				Description:  "It's a laptop",
 				Color:        "red",
@@ -135,7 +137,7 @@ func TestInsertFetch(t *testing.T) {
 		},
 		{
 			Device{
-				SerialNumber: "DEADBEEF123A",
+				SerialNumber: toNullString("DEADBEEF123A"),
 				Model:        "Macbook",
 				Description:  "It's a laptop",
 				Color:        "red",
@@ -143,7 +145,7 @@ func TestInsertFetch(t *testing.T) {
 		},
 		{
 			Device{
-				SerialNumber: "DEADBEEF123B",
+				SerialNumber: toNullString("DEADBEEF123B"),
 				Model:        "Macbook",
 				Description:  "It's a laptop",
 				Color:        "blue",
@@ -151,7 +153,7 @@ func TestInsertFetch(t *testing.T) {
 		},
 		{
 			Device{
-				SerialNumber:         "DEADBEEF123C",
+				SerialNumber:         toNullString("DEADBEEF123C"),
 				Model:                "iPad",
 				Description:          "It's a tablet",
 				Color:                "pink",
@@ -183,7 +185,7 @@ func TestInsertAuthenticate(t *testing.T) {
 	}{
 		{
 			Device{
-				SerialNumber: "DEADBEEF123A",
+				SerialNumber: toNullString("DEADBEEF123A"),
 				Model:        "Macbook",
 				Description:  "It's a laptop",
 				Color:        "red",
@@ -191,7 +193,7 @@ func TestInsertAuthenticate(t *testing.T) {
 		},
 		{
 			Device{
-				SerialNumber: "DEADBEEF123A",
+				SerialNumber: toNullString("DEADBEEF123A"),
 				Model:        "Macbook",
 				Description:  "It's a laptop",
 				Color:        "red",
@@ -199,7 +201,7 @@ func TestInsertAuthenticate(t *testing.T) {
 		},
 		{
 			Device{
-				SerialNumber: "DEADBEEF123B",
+				SerialNumber: toNullString("DEADBEEF123B"),
 				Model:        "Macbook",
 				Description:  "It's a laptop",
 				Color:        "blue",
@@ -207,8 +209,8 @@ func TestInsertAuthenticate(t *testing.T) {
 		},
 		{
 			Device{
-				UDID:         "581ddbee-7742-4472-aadd-6d2ad35c4470",
-				SerialNumber: "DEADBEEF123B",
+				UDID:         toNullString("581ddbee-7742-4472-aadd-6d2ad35c4470"),
+				SerialNumber: toNullString("DEADBEEF123B"),
 				Model:        "Macbook",
 				Description:  "It's a laptop",
 				Color:        "blue",
@@ -216,8 +218,8 @@ func TestInsertAuthenticate(t *testing.T) {
 		},
 		{
 			Device{
-				UDID:         "581ddbee-7742-4472-aadd-6d2ad35c4470",
-				SerialNumber: "DEADBEEF123B",
+				UDID:         toNullString("581ddbee-7742-4472-aadd-6d2ad35c4470"),
+				SerialNumber: toNullString("DEADBEEF123B"),
 				Model:        "Macbook",
 				Description:  "It's a laptop",
 				Color:        "blue",
@@ -225,7 +227,7 @@ func TestInsertAuthenticate(t *testing.T) {
 		},
 		{
 			Device{
-				SerialNumber:         "DEADBEEF123C",
+				SerialNumber:         toNullString("DEADBEEF123C"),
 				Model:                "iPad",
 				Description:          "It's a tablet",
 				Color:                "pink",
@@ -256,8 +258,8 @@ func TestGetDeviceByUDID(t *testing.T) {
 	}{
 		{
 			Device{
-				UDID:         "581ddbee-7742-4472-aadd-6d2ad35c4471",
-				SerialNumber: "DEADBEEF123A",
+				UDID:         toNullString("581ddbee-7742-4472-aadd-6d2ad35c4471"),
+				SerialNumber: toNullString("DEADBEEF123A"),
 				Model:        "Macbook",
 				Description:  "It's a laptop",
 				Color:        "red",
@@ -265,8 +267,8 @@ func TestGetDeviceByUDID(t *testing.T) {
 		},
 		{
 			Device{
-				UDID:         "581ddbee-7742-4472-aadd-6d2ad35c4471",
-				SerialNumber: "DEADBEEF123A",
+				UDID:         toNullString("581ddbee-7742-4472-aadd-6d2ad35c4471"),
+				SerialNumber: toNullString("DEADBEEF123A"),
 				Model:        "Macbook",
 				Description:  "It's a laptop",
 				Color:        "red",
@@ -274,8 +276,8 @@ func TestGetDeviceByUDID(t *testing.T) {
 		},
 		{
 			Device{
-				UDID:         "581ddbee-7742-4472-aadd-6d2ad35c4470",
-				SerialNumber: "DEADBEEF123B",
+				UDID:         toNullString("581ddbee-7742-4472-aadd-6d2ad35c4470"),
+				SerialNumber: toNullString("DEADBEEF123B"),
 				Model:        "Macbook",
 				Description:  "It's a laptop",
 				Color:        "blue",
@@ -283,8 +285,8 @@ func TestGetDeviceByUDID(t *testing.T) {
 		},
 		{
 			Device{
-				UDID:         "581ddbee-7742-4472-aadd-6d2ad35c4470",
-				SerialNumber: "DEADBEEF123B",
+				UDID:         toNullString("581ddbee-7742-4472-aadd-6d2ad35c4470"),
+				SerialNumber: toNullString("DEADBEEF123B"),
 				Model:        "Macbook",
 				Description:  "It's a laptop",
 				Color:        "blue",
@@ -292,8 +294,8 @@ func TestGetDeviceByUDID(t *testing.T) {
 		},
 		{
 			Device{
-				UDID:         "581ddbee-7742-4472-aadd-6d2ad35c4470",
-				SerialNumber: "DEADBEEF123B",
+				UDID:         toNullString("581ddbee-7742-4472-aadd-6d2ad35c4470"),
+				SerialNumber: toNullString("DEADBEEF123B"),
 				Model:        "Macbook",
 				Description:  "It's a laptop",
 				Color:        "blue",
@@ -301,8 +303,8 @@ func TestGetDeviceByUDID(t *testing.T) {
 		},
 		{
 			Device{
-				UDID:                 "581ddbee-7742-4472-aadd-6d2ad35c4472",
-				SerialNumber:         "DEADBEEF123C",
+				UDID:                 toNullString("581ddbee-7742-4472-aadd-6d2ad35c4472"),
+				SerialNumber:         toNullString("DEADBEEF123C"),
 				Model:                "iPad",
 				Description:          "It's a tablet",
 				Color:                "pink",
@@ -321,24 +323,24 @@ func TestGetDeviceByUDID(t *testing.T) {
 		if len(uuid) != 36 {
 			t.Errorf("newdevice get device by udid: expected uuid got %q", uuid)
 		}
-		d, err := ds.GetDeviceByUDID(tt.in.UDID, "device_uuid", "udid", "serial_number")
+		d, err := ds.GetDeviceByUDID(tt.in.UDID.String, "device_uuid", "udid", "serial_number")
 		if err != nil {
 			t.Log("get failed at", tt.in.SerialNumber)
 			t.Fatal(err)
 		}
 		if d.SerialNumber != tt.in.SerialNumber {
-			t.Errorf("get device by udid: expected %q got %q", tt.in.SerialNumber, d.SerialNumber)
+			t.Errorf("get device by udid: expected %v got %v", tt.in.SerialNumber, d.SerialNumber)
 		}
 	}
 
 }
 
 var (
-	testConn = "user=micromdm password=micromdm dbname=micromdm sslmode=disable"
+	testConn = "user=postgres password=postgres dbname=micromdm sslmode=disable"
 )
 
 func datastore(t *testing.T) Datastore {
-	//setup()
+	setup()
 	logger := log.NewLogfmtLogger(os.Stderr)
 	ds, err := NewDB("postgres", testConn, logger)
 	if err != nil {
@@ -348,11 +350,19 @@ func datastore(t *testing.T) Datastore {
 }
 
 func setup() {
-	db, err := sqlx.Open("postgres", testConn)
+	db, err := sql.Open("postgres", testConn)
 	if err != nil {
 		panic(err)
 	}
-	migrate(db)
+	migrator, err := gomigrate.NewMigrator(db, gomigrate.Postgres{}, "./migrations")
+	if err != nil {
+		panic(err)
+	}
+	migrationErr := migrator.Migrate()
+
+	if migrationErr != nil {
+		panic(err)
+	}
 	defer db.Close()
 }
 
@@ -370,4 +380,8 @@ func teardown() {
 	`
 	db.MustExec(drop)
 	defer db.Close()
+}
+
+func toNullString(s string) JsonNullString {
+	return JsonNullString{sql.NullString{String: s, Valid: s != ""}}
 }

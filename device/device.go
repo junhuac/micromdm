@@ -5,9 +5,9 @@ import (
 	"errors"
 	"time"
 
-	"github.com/micromdm/dep"
-	//"github.com/micromdm/mdm"
 	"database/sql"
+
+	"github.com/micromdm/dep"
 )
 
 type JsonNullString struct {
