@@ -2,6 +2,7 @@ package device
 
 import (
 	"database/sql"
+	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -354,16 +355,17 @@ func setup(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	defer db.Close()
+
 	migrator, err := gomigrate.NewMigrator(db, gomigrate.Postgres{}, "./migrations")
 	if err != nil {
 		t.Fatal(err)
 	}
-	migrationErr := migrator.Migrate()
-
-	if migrationErr != nil {
+	err = migrator.Migrate()
+	if err != nil {
 		t.Fatal(err)
 	}
-	defer db.Close()
+	fmt.Println("ran migrations")
 }
 
 func teardown() {
