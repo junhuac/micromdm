@@ -6,6 +6,7 @@ all: build
 
 deps: 
 	@echo ">> getting dependencies"
+	mkdir -p "${GOPATH}/bin"
 	curl https://glide.sh/get | sh
 	@$(glide) install
 
