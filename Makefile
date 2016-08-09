@@ -6,6 +6,7 @@ all: build
 
 deps: 
 	@echo ">> getting dependencies"
+	curl https://glide.sh/get | sh
 	@$(glide) install
 
 build: deps
