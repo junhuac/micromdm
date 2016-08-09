@@ -352,9 +352,7 @@ func datastore(t *testing.T) Datastore {
 }
 
 func setup(t *testing.T) {
-	host := os.Getenv("POSTGRES_ENV_POSTGRES_HOST")
-	port := os.Getenv("POSTGRES_ENV_POSTGRES_PORT")
-	conn := fmt.Sprintf("%v host=%v, port=%v", testConn, host, port)
+	conn := fmt.Sprintf("%v host=mdm.groob.io, port=5434", testConn)
 	db, err := sql.Open("postgres", conn)
 	if err != nil {
 		t.Fatal(err)
