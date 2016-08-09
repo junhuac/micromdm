@@ -340,7 +340,7 @@ var (
 )
 
 func datastore(t *testing.T) Datastore {
-	setup()
+	setup(t)
 	logger := log.NewLogfmtLogger(os.Stderr)
 	ds, err := NewDB("postgres", testConn, logger)
 	if err != nil {
@@ -349,19 +349,19 @@ func datastore(t *testing.T) Datastore {
 	return ds
 }
 
-func setup() {
+func setup(t *testing.T) {
 	db, err := sql.Open("postgres", testConn)
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 	migrator, err := gomigrate.NewMigrator(db, gomigrate.Postgres{}, "./migrations")
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 	migrationErr := migrator.Migrate()
 
 	if migrationErr != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 	defer db.Close()
 }
